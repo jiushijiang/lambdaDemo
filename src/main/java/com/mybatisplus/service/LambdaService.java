@@ -23,4 +23,9 @@ public interface LambdaService {
 
 
     public void checkStr02();
+
+
+    public void confirm();
+
+    public void getResult();
 }

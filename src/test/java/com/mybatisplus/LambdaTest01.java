@@ -85,6 +85,19 @@ public class LambdaTest01 {
 
         lambdaService.checkStr02();
     }
+    @Test
+    public void test11(){
+
+        lambdaService.confirm();
+    }
+
+
+    @Test
+    public void test12(){
+
+        lambdaService.getResult();
+    }
+
 
 
 

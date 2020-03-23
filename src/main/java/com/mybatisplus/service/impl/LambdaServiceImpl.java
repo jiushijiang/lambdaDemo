@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -183,6 +184,42 @@ public class LambdaServiceImpl implements LambdaService {
 
     }
 
+    @Override
+    public void confirm() {
+        String[] msg = {"迪丽热巴,女", "古力娜扎,女", "马尔扎哈,男"};
+
+        List<String> list=new ArrayList<>();
+
+        for (String s : msg) {
+
+            String s2 = confirm(s1 -> {
+
+
+                s1 = s1 + "性";
+
+                return s1;
+            }, s);
+            list.add(s2);
+
+        }
+        System.out.println(list);
+
+    }
+
+    @Override
+    public void getResult() {
+        int num=2;
+
+        int calculate = calculate(
+                s -> s + 1,
+                s -> s * 2,
+                num
+
+        );
+        System.out.println(calculate);
+
+    }
+
     private static Comparator<String> newComparator() {
         return (a, b) -> b.length() - a.length();
     }
@@ -249,6 +286,20 @@ public class LambdaServiceImpl implements LambdaService {
         return null;
 
 
+    }
+
+
+    private String confirm(Function<String,String> function,String string){
+
+        return function.apply(string);
+
+
+
+    }
+
+    private int calculate(Function<Integer,Integer> fun1,Function<Integer,Integer> fun2,int num){
+
+        return fun1.andThen(fun2).apply(num);
     }
 
 }
