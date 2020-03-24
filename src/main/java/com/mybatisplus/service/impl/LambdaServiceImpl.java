@@ -30,14 +30,25 @@ public class LambdaServiceImpl implements LambdaService {
 
     }
 
+
+    private static void log(Integer num, MessageBuilder msg) {
+
+        if (num == 1) {
+            System.out.println(msg);
+        }
+    }
+
     @Override
     public void startThread() {
 
         startRunnable(() -> {
             System.out.println("线程执行中......");
         });
+    }
 
-
+    private static void startRunnable(Runnable task) {
+        new Thread(task).start();
+        System.out.println("线程已经执行了");
     }
 
     @Override
@@ -46,6 +57,10 @@ public class LambdaServiceImpl implements LambdaService {
         System.out.println(Arrays.toString(array));
         Arrays.sort(array, newComparator());
         System.out.println(Arrays.toString(array));
+    }
+
+    private static Comparator<String> newComparator() {
+        return (a, b) -> b.length() - a.length();
     }
 
     @Override
@@ -59,16 +74,14 @@ public class LambdaServiceImpl implements LambdaService {
                 if (i > max) {
                     max = i;
                 }
-
             }
-
             return max;
-
-
         });
-
-
         return max1;
+    }
+
+    private int getMax(Supplier<Integer> supplier) {
+        return supplier.get();
     }
 
     @Override
@@ -81,10 +94,15 @@ public class LambdaServiceImpl implements LambdaService {
 
     }
 
+    private static void customer(Consumer<String> consumer) {
+
+        consumer.accept("hello");
+    }
+
+
 
     @Override
     public void andThen() {
-
         customer(
                 s -> {
                     System.out.println(s.toLowerCase());
@@ -93,7 +111,9 @@ public class LambdaServiceImpl implements LambdaService {
                     System.out.println(s.toUpperCase());
                 }
         );
-
+    }
+    private static void customer(Consumer<String> cu1, Consumer<String> cu2) {
+        cu1.andThen(cu2).accept("Hello");
     }
 
     @Override
@@ -123,7 +143,11 @@ public class LambdaServiceImpl implements LambdaService {
         );
         System.out.println(length);
 
+    }
+    private static boolean isLength(Predicate<String> predicate){
 
+        boolean flag=predicate.test("helloworld");
+        return flag;
     }
 
     /**
@@ -138,13 +162,14 @@ public class LambdaServiceImpl implements LambdaService {
                 s -> s.contains("w"),
                 s -> s.contains("a"),
                 str
-
-
         );
-
         System.out.println(current);
-
     }
+    private static boolean isCurrent(Predicate<String> pre1,
+                                     Predicate<String> pre2,String str){
+        return pre1.and(pre2).negate().test(str);
+    }
+
 
     /**
      * 过滤：
@@ -214,43 +239,24 @@ public class LambdaServiceImpl implements LambdaService {
                 s -> s + 1,
                 s -> s * 2,
                 num
-
         );
         System.out.println(calculate);
+    }
+    private int calculate(Function<Integer,Integer> fun1,
+                          Function<Integer,Integer> fun2,int num){
 
+        return fun1.andThen(fun2).apply(num);
     }
 
-    private static Comparator<String> newComparator() {
-        return (a, b) -> b.length() - a.length();
-    }
 
-    private static void log(Integer num, MessageBuilder msg) {
 
-        if (num == 1) {
-            System.out.println(msg);
-        }
-    }
 
-    private static void startRunnable(Runnable task) {
 
-        new Thread(task).start();
-        System.out.println("线程已经执行了");
-    }
 
-    private int getMax(Supplier<Integer> supplier) {
-        return supplier.get();
 
-    }
 
-    private static void customer(Consumer<String> consumer) {
 
-        consumer.accept("hello");
-    }
 
-    private static void customer(Consumer<String> cu1, Consumer<String> cu2) {
-
-        cu1.andThen(cu2).accept("Hello");
-    }
 
     private static void splitMsg(Consumer<String> cu1, Consumer<String> cu2,String[] msg) {
 
@@ -263,18 +269,8 @@ public class LambdaServiceImpl implements LambdaService {
 
     }
 
-    private static boolean isLength(Predicate<String> predicate){
-
-        boolean flag=predicate.test("helloworld");
-        return flag;
-    }
-
-    private static boolean isCurrent(Predicate<String> pre1,Predicate<String> pre2,String str){
-
-        return pre1.and(pre2).negate().test(str);
 
 
-    }
 
     private static String display(Predicate<String> pre1,Predicate<String> pre2,String str2){
 
@@ -297,9 +293,6 @@ public class LambdaServiceImpl implements LambdaService {
 
     }
 
-    private int calculate(Function<Integer,Integer> fun1,Function<Integer,Integer> fun2,int num){
 
-        return fun1.andThen(fun2).apply(num);
-    }
 
 }
